@@ -1,0 +1,33 @@
+# Disable directory listing and server signature for security
+Options -Indexes
+ServerSignature Off
+
+# Disable PHP error display to prevent info leaks
+php_flag display_errors off
+php_value error_reporting 0
+
+# Block access to sensitive files (e.g., .htaccess, logs, git)
+<FilesMatch "^(\.htaccess|\.htpasswd|\.git|\.svn|.*\.log)">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Allow only the main application files
+<FilesMatch "^(index\.php|view\.php|admin\.php)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Prevent direct access to Uploads and temp directories
+<DirectoryMatch "^/(Uploads|temp)/">
+    Order Deny,Allow
+    Deny from all
+</DirectoryMatch>
+
+# Block PHP execution in Uploads and temp directories
+<DirectoryMatch "^/(Uploads|temp)/">
+    <FilesMatch "\.php$">
+        Order Allow,Deny
+        Deny from all
+    </FilesMatch>
+</DirectoryMatch>
